@@ -46,7 +46,7 @@ cat("All but first 175 elements", tail(bin_draws_0.5,24))
 
 - **1b.** Add the first element of `bin_draws_0.5` to the seventh. Compare the second element to the fifth, which is larger? A bit more tricky: print the indices of the elements of `bin.draws.0.5` that are equal to 5. How many such elements are there? **Challenge**: theoretically, how many such elements would you expect there to be?
 
-***Answer***
+***Answer***<br />
 Theoretically, all 200 elements would have the value of 5, beacuse the probablility is 0.5.
 ```{r}
 bin_draws_0.5[1] + bin_draws_0.5[7]
@@ -72,7 +72,7 @@ length(element_index)
 
 - **1c.** Find the mean and standard deviation of `bin_draws_0.5`. Is the mean close what you'd expect? The standard deviation?
 
-***Answer***
+***Answer***<br />
 The mean is very close to what I expect it to be as the theoretical mean is 5.
 The standard deviation in theory should be 1.58, so it is fairly close to the expected standard deviation.
 ```{r}
@@ -84,7 +84,7 @@ sd(bin_draws_0.5)
 
 - **1d.** Call `summary()` on `bin_draws_0.5` and describe the result.
 
-***Answer***
+***Answer***<br />
 The results show that the median is close to the mean, which means the mean isn't affected by extreme outliers. Also, the first and third quadrants are close to the median which also shows the data is fairly concentrated.
 ```{r}
 summary(bin_draws_0.5)
@@ -109,18 +109,74 @@ Some simple plots
 
 - **2a.** The function `plot()` is a generic function in R for the visual display of data. The function `hist()` specifically produces a histogram display. Use `hist()` to produce a histogram of your random draws from the binomial distribution, stored in `bin_draws_0.5`. 
 
+***Answer*** <br />
+```{r}
+hist(bin_draws_0.5)
+```
+
 - **2b.** Call `tabulate()` on `bin_draws_0.5`. What is being shown? Does it roughly match the histogram you produced in the last question?
+
+***Answer***<br />
+Tabulate produces a vector of the counts in each bin of the histogram. It seems to match the histogram above.
+```{r}
+tabulate(bin_draws_0.5)
+```
+
 
 - **2c.** Call `plot()` on `bin_draws_0.5` to display your random values from the binomial distribution. Can you guess what the `plot()` function is doing here?
 
+***Answer*** <br />
+The plot function is plotting the value in `bin_draws_0.5` on the y-axis against the index of the value in the x-axis.
+```{r}
+plot(bin_draws_0.5)
+```
+
 - **2d.** Call `plot()` with two arguments, the first being `1:200`, and the second being `bin_draws_0.5`. This creates a scatterplot of `bin_draws_0.5` (on the y-axis) versus the indices 1 through 200 (on the x-axis). Does this match your plot from the last question?
+
+***Answer*** <br />
+Yes, this is the same plot as the one above.
+```{r}
+plot(1:200, bin_draws_0.5)
+```
+
 
 More binomials, more plots
 ===
 
 - **3a.** Generate binomial random variables again, but now produce 7 different vectors of length 200, with probability of success equal to: 0.2, 0.3, 0.4, 0.6, 0.7, and 0.8, storing the results in vectors called `bin_draws_0.2`, `bin_draws_0.3`, `bin_draws_0.4.`, `bin_draws_0.6`, `bin_draws_0.7` and  `bin_draws_0.8`. For each, compute the mean and standard deviation.
 
+***Answer***
+```{r}
+bin_draws_0.2 <- rbinom(n=200, size = 10, prob = 0.2)
+cat("bin_draws_0.2\nMean:", mean(bin_draws_0.2), "\nStandard Deviation: ", sd(bin_draws_0.2))
+
+bin_draws_0.3 <- rbinom(n=200, size = 10, prob = 0.3)
+cat("bin_draws_0.3\nMean:", mean(bin_draws_0.3), "\nStandard Deviation: ", sd(bin_draws_0.3))
+
+bin_draws_0.4 <- rbinom(n=200, size = 10, prob = 0.4)
+cat("bin_draws_0.4\nMean:", mean(bin_draws_0.4), "\nStandard Deviation: ", sd(bin_draws_0.4))
+
+cat("bin_draws_0.5\nMean:", mean(bin_draws_0.5), "\nStandard Deviation: ", sd(bin_draws_0.5))
+
+bin_draws_0.6 <- rbinom(n=200, size = 10, prob = 0.6)
+cat("bin_draws_0.6\nMean:", mean(bin_draws_0.6), "\nStandard Deviation: ", sd(bin_draws_0.6))
+
+bin_draws_0.7 <- rbinom(n=200, size = 10, prob = 0.7)
+cat("bin_draws_0.7\nMean:", mean(bin_draws_0.7), "\nStandard Deviation: ", sd(bin_draws_0.7))
+
+bin_draws_0.8 <- rbinom(n=200, size = 10, prob = 0.8)
+cat("bin_draws_0.8\nMean:", mean(bin_draws_0.8), "\nStandard Deviation: ", sd(bin_draws_0.8))
+```
+
+
 - **3b.** We'd like to compare the properties of our vectors. Create a vector of length 7, whose entries are the means of the 7 vectors we've created, in order according to the success probabilities of their underlying binomial distributions (0.2 through 0.8).
+
+***Answer***<br />
+```{r}
+bin_means <- c(mean(bin_draws_0.2),mean(bin_draws_0.3),mean(bin_draws_0.4),mean(bin_draws_0.5),mean(bin_draws_0.6),mean(bin_draws_0.7),mean(bin_draws_0.8))
+bin_means
+```
+
 
 - **3c.** Using the vectors from the last part, create the following scatterplots. Explain in words, for each, what's going on.    
 
@@ -129,24 +185,85 @@ More binomials, more plots
     * The standard deviations versus the means.
     
     **Challenge**: for each plot, add a curve that corresponds to the relationships you'd expect to see in the theoretical population (i.e., with an infinite amount of draws, rather than just 200 draws).
+    
+***Answer***<br />
+```{r}
+bin_prob <- seq(0.2,0.8,0.1)
+plot(bin_prob, bin_means, main = "Mean vs. Probability", xlab = "Mean", ylab = "Probability")
+
+bin_std <- c(sd(bin_draws_0.2),sd(bin_draws_0.3),sd(bin_draws_0.4),sd(bin_draws_0.5),sd(bin_draws_0.6),sd(bin_draws_0.7),sd(bin_draws_0.8))
+plot(bin_prob, bin_std, main = "St. Dev. vs. Probability", xlab = "Probability", ylab = "St. Dev.")
+
+plot(bin_means, bin_std, main = "St. Dev vs. Mean", xlab = "Mean", ylab = "St. Dev.")
+```
+
 
 Working with matrices
 ===
 
 - **4a.** Create a matrix of dimension 200 x 7, called `bin_matrix`, whose columns contain the 7 vectors we've created, in order of the success probabilities of their underlying binomial distributions (0.2 through 0.8). 
 
+***Answer*** <br />
+```{r}
+bin_matrix <- cbind(bin_draws_0.2, bin_draws_0.3, bin_draws_0.4, bin_draws_0.5, bin_draws_0.6, bin_draws_0.7, bin_draws_0.8)
+```
+
+
 - **4b.** Print the first three rows of `bin_matrix`. Print the element in the 77th row and 6th column. Compute the largest element in first column. Compute the largest element in all but the first column.
+
+***Answer*** <br />
+```{r}
+bin_matrix[1:3,]
+cat("Element at [77,6]:",bin_matrix[77,6])
+cat("Max in first column:",max(bin_matrix[,1]))
+cat("Max in 2:7:",max(bin_matrix[,2:7]))
+```
+
 
 - **4c.** Calculate the means of each column by calling `colMeans()` on `bin_matrix`. 
 
+***Answer*** <br />
+```{r}
+mat_means <- colMeans(bin_matrix)
+mat_means
+```
+
+
 - **4d.** Compare the means you computed in the last question to those you computed in Q3b. Do they appear equal, when you print the results out to the console? Try using `identical()` to check that they are exactly equal. Does it fail? Why? Try using `all.equal()`. What does it report?
 
+***Answer*** <br />
+They appear equal but identical says that they are not. I belive that it failed because identical takes into account the data type and one is a vector while the other is a matrix. Using `all.equal()` reports "names for current but not for target".
+```{r}
+identical(bin_means, mat_means)
+all.equal(bin_means, mat_means)
+```
+
+
 - **4e.** Take the transpose of `bin_matrix` and then take row means. Are these the same as what you just computed? Should they be?
+
+***Answer*** <br />
+Yes, the means of the transpose matrix are the same as the means above and they should be the same.
+```{r}
+mat_row_means <- rowMeans(t(bin_matrix))
+mat_row_means
+```
+
 
 Warm up is over, let's go big
 ===
 
 - **5a.** R's capacity for data storage and computation is very large compared to what was available 10 years ago. Generate 2 million numbers from $\mathrm{Bin}(1 \times 10^6, 0.5)$ distribution and store them in a vector called `big_bin_draws`. Calculate the mean and standard deviation of this vector.
+
+***Answer***
+```{r}
+big_bin_draws <- rbinom(n = 2000000000, size = 1000000, prob = 0.5)
+```
+
+```{r}
+cat("Mean:",mean(big_bin_draws))
+cat("St. Deviation:", sd(big_bin_draws))
+```
+
 
 - **5b.** Create a new vector, called `big_bin_draws_standardized`, which is given by taking `big_bin_draws`, subtracting off its mean, and then dividing by its standard deviation. Calculate the mean and standard deviation of `big_bin_draws_standardized`. (These should be 0 and 1, respectively, or very, very close to it; if not, you've made a mistake somewhere).
 
