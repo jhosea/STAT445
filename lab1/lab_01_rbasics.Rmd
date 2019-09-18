@@ -254,9 +254,9 @@ Warm up is over, let's go big
 
 - **5a.** R's capacity for data storage and computation is very large compared to what was available 10 years ago. Generate 2 million numbers from $\mathrm{Bin}(1 \times 10^6, 0.5)$ distribution and store them in a vector called `big_bin_draws`. Calculate the mean and standard deviation of this vector.
 
-***Answer***
+***Answer***<br />
 ```{r}
-big_bin_draws <- rbinom(n = 2000000000, size = 1000000, prob = 0.5)
+big_bin_draws <- rbinom(n = 2000000, size = 1000000, prob = 0.5)
 ```
 
 ```{r}
@@ -267,31 +267,111 @@ cat("St. Deviation:", sd(big_bin_draws))
 
 - **5b.** Create a new vector, called `big_bin_draws_standardized`, which is given by taking `big_bin_draws`, subtracting off its mean, and then dividing by its standard deviation. Calculate the mean and standard deviation of `big_bin_draws_standardized`. (These should be 0 and 1, respectively, or very, very close to it; if not, you've made a mistake somewhere).
 
+***Answer***<br />
+```{r}
+big_bin_draws_standardized <- (big_bin_draws-mean(big_bin_draws))/sd(big_bin_draws)
+cat("Mean:", mean(big_bin_draws_standardized))
+cat("St. Deviation:",sd(big_bin_draws_standardized))
+```
+
+
+
 - **5c.** Plot a histogram of `big_bin_draws_standardized`. To increase the number of histogram bars, set the `breaks` argument in the `hist()` function (e.g., set `breaks=100`). What does the shape of this histogram appear to be? Is this surprising? What could explain this phenomenon? (Hint: rhymes with "Mental Gimmick Serum" ...)
+
+***Answer***<br />
+The shape of the histogram appears to be a normal distribution. No, it is not suprising as the Central Limit Theorem states that independent random variables after being normalized tend to look like the normal distribution.
+```{r}
+hist(big_bin_draws_standardized, breaks = 100)
+```
+
 
 - **5d.** Calculate the proportion of times that an element of `big_bin_draws_standardized` exceeds 1.644854. Is this close to 0.05? 
 
+***Answer*** <br />
+Yes, the proportion is close to 0.05.
+```{r}
+cat("Proportion:",sum(big_bin_draws_standardized > 1.644854) / length(big_bin_draws_standardized))
+```
+
+
 - **5e.** Either by simulation, or via a built-in R function, compute the probability that a standard normal random variable exceeds 1.644854. Is this close to 0.05? (Hint: for either approach, it would be helpful to look at the help file for the `rnorm()` function.)
+
+***Answer*** <br />
+Yes, this value is also very close to 0.05.
+```{r}
+normal_random <- rnorm(2000000)
+cat("Probability > 1.644854:",sum(normal_random > 1.644854) / length(normal_random))
+```
+
 
 Now let's go really big
 ===
 
 - **6a.** Let's push R's computational engine a little harder. Design an expression to generate 100 million numbers from $\mathrm{Bin}(10 \times 10^6, 50 \times 10^{-8})$, to be saved in a vector called `huge_bin_draws`, but do not evaluate this command yet. Then ask your lab partner to name three of Justin Bieber's songs and simultaneously evaluate your R command that defines `huge_bin_draws`. Which finished first, R or your partner?  (Note: your partner cannot really win this game. Even if he/she finishes first, he/she still loses.)
 
+***Answer***<br />
+We could not name three Justin Bieber songs, so do we win?
+```{r}
+huge_bin_draws <- rbinom(n = 100000000, size = 10000000, prob = 50*10^-8)
+```
+
+
 - **6b.** Calculate the mean and standard deviation of `huge_bin_draws`. Are they close to what you'd expect? (They should be very close.) Did it take longer to compute these, or to generate `huge_bin_draws` in the first place?
 
-- **6c.** Calculate the median of `huge_bin_draws`. Did this median calculation take longer than the calculating the mean? Is this surprising? 
+***Answer***<br />
+These are the very close to the values that we expect as with so many trials the values should be closer to the theoretical. It seems like it took longer to generate huge_bin_draws than these values. 
+```{r}
+cat("Mean:", mean(huge_bin_draws))
+cat("St. Deviation:",sd(huge_bin_draws))
+```
+
+
+- **6c.** Calculate the median of `huge_bin_draws`. Did this median calculation take longer than the calculating the mean? Is this surprising?
+
+***Answer***<br />
+It was a little bit slower to calculate the median. This makes sense as calculating the median has more calculations than the mean.
+```{r}
+cat("Median:",median(huge_bin_draws))
+```
+
 
 - **6d.** Calculate *e* to the power of the median of the logs of `huge_bin_draws`, in one line of code. Did this take longer than the median calculation applied to `huge_bin_draws` directly? Is this surprising?
 
+***Answer***<br />
+It seems like it took longer than generating `huge_bin_draws` itself. This isn't suprising as we have to find the log of 100,000,000 values and then find the median of that.
+```{r}
+exp(median(log(huge_bin_draws)))
+```
+
+
 - **6e.** Plot a histogram of of `huge_bin_draws`, again with a large setting of the `breaks` argument (e.g., `breaks=100`). Describe what you see; is this different from before, when we had 2 million draws? **Challenge**: is this surprising? What distribution is this?
+
+***Answer***<br />
+Yes, this is different because there is a much lower probability. The distribution below resembles a Poisson distribution more than a normal distribution. This isn't suprising as Possion distributions are for rare events within large amounts of observations.
+```{r}
+hist(huge_bin_draws, breaks = 100)
+```
+
 
 Going big with lists
 ===
 
 - **7a.** Convert `big_bin_draws` into a list using `as.list()` and save the result as `big_bin_draws_list`. Check that you indeed have a list by calling `class()` on the result. Check also that your list has the right length, and that its 1049th element is equal to that of `big_bin_draws`.
 
+***Answer*** <br />
+```{r}
+big_bin_draws_list <- as.list(big_bin_draws)
+
+cat("Class:",class(big_bin_draws_list))
+cat("Length:",length(big_bin_draws_list))
+cat("1049th Element Equal:",big_bin_draws_list[1049] == big_bin_draws[1049])
+```
+
+
 - **7b.** Run the code below, to standardize the binomial draws in the list `big_bin_draws_list`. Note that `lapply()` applies the function supplied in the second argument to every element of the list supplied in the first argument, and then returns a list of the function outputs. Did this `lapply()` command take longer to evaluate than the code you wrote in Q5b? (It should have; otherwise your previous code could have been improved, so go back and improve it.) Why do you think this is the case?
+
+***Answer***<br />
+It did not take longer to execute than my code in Q5b. This is because lapply had to go row by row and call a functino calculate the standardized number. But in my code, it used one command to calculate the standardized numbers.
 
 ```{r, eval=FALSE}
 big_bin_draws_mean = mean(big_bin_draws)
@@ -304,6 +384,9 @@ big_bin_draws_list_standardized_slow = lapply(big_bin_draws_list, standardize)
 
 - **7c.** Run the code below, which again standardizes the binomial draws in the list `big_bin_draws_list`, using `lapply()`. Why is it so much slower than the code in the last question? Think about what is happening each time the function is called.
 
+***Answer*** <br />
+This code is slower because it calculates the mean and standard deviation every time the function is called. So the number of operations per function call just went up by two.
+
 ```{r, eval=FALSE}
 big_bin_draws_mean = mean(big_bin_draws)
 big_bin_draws_sd = sd(big_bin_draws)
@@ -314,3 +397,11 @@ big_bin_draws_list_standardized_slow = lapply(big_bin_draws_list, standardize)
 ```
 
 - **7d.** Lastly, let's look at memory useage. The command `object.size(x)` returns the number of bytes used to store the object `x` in your current R session. Find the number of bytes used to store `big_bin_draws` and `big_bin_draws_list`. How many megabytes (MB) is this, for each object? Which object requires more memory, and why do you think this is the case? Remind yourself: why are lists special compared to vectors, and is this property important for the current purpose (storing the binomial draws)?
+
+***Answer*** <br />
+The list requires more memory. This is the case because lists are recursive and can have any data type, which makes them slower. This property is not important for sotring binomial draws as the data types are all the same.
+```{r}
+cat("big_bin_draws Storage:",object.size(big_bin_draws) / 1000000)
+cat("big_bin_draws_list Storage:",object.size(big_bin_draws_list) / 1000000)
+```
+
